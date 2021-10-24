@@ -76,11 +76,9 @@ function calculaHorasExtras() {
     //Salário Líquido (salário bruto + horas extras)
     empregado.setValorSalarioLiquido(salario);
     console.log('Calculando horas extras');
-    console.log('Valor das horas calculadas: ' + horasExtras);
-    console.log('Salário + Horas Extras: ' + salario + '\n');
+    console.log('Valor das horas calculadas: ' + horasExtras + '\n');
 }
 function calcularDescontoINSS() {
-    console.log('Calculando descontos do INSS');
     var aliquota = 0, valorComDescontoINSS = 0, salario = empregado.getValorSalarioLiquido();
     switch (true) {
         case (salario <= 1100):
@@ -105,12 +103,12 @@ function calcularDescontoINSS() {
     empregado.setValorDescontadoINSS(valorComDescontoINSS);
     //Salário Líquido (salário bruto + horas extras - INSS)
     empregado.setValorSalarioLiquido(salario);
+    console.log('Calculando descontos do INSS');
+    console.log('Faixa INSS: ' + aliquota);
     console.log('Valor descontado de INSS: ' + valorComDescontoINSS + '\n');
-    console.log('Salário - Desconto INSS: ' + salario + '\n');
 }
 function calcularDescontoIRRF() {
     var aliquota = 0, valorComDescontoIRRF = 0, salario = empregado.getValorSalarioLiquido();
-    console.log('Calculando descontos do IRRF');
     switch (true) {
         case (salario <= 1903.98):
             aliquota = 0;
@@ -134,21 +132,35 @@ function calcularDescontoIRRF() {
     empregado.setValorDescontadoIR(valorComDescontoIRRF);
     //Salário Líquido (salário bruto - desconto INSS - desconto IR + horas extras)
     empregado.setValorSalarioLiquido(salario);
-    console.log('Valor descontado de INSS: ' + valorComDescontoIRRF + '\n');
-    console.log('Salário - Desconto IRRF: ' + salario + '\n');
+    console.log('Calculando descontos do IRRF');
+    console.log('Faixa IRRF: ' + aliquota);
+    console.log('Valor descontado de IRRF: ' + valorComDescontoIRRF + '\n');
+    console.log('---------------------------------------------');
+    console.log('SALÁRIO LÍQUIDO: (salário bruto - desconto INSS - desconto IR + horas extras)');
+    console.log(salario);
 }
 function calculaSalario(nome, salario, quantidadelHorasExtras) {
     console.log('SALÁRIO: ' + salario + '\n');
-    console.log(nome);
-    console.log(salario);
-    console.log(quantidadelHorasExtras);
     empregado.setNome(nome);
     empregado.setSalarioBruto(parseFloat(salario));
     empregado.setQuantidadelHorasExtras(parseFloat(quantidadelHorasExtras));
     calculaHorasExtras();
     calcularDescontoINSS();
     calcularDescontoIRRF();
-    console.log(empregado);
+    console.log('---------- DADOS DO EMPREGADO ----------');
+    montaRetorno();
+}
+function montaRetorno() {
+    console.log({
+        'Nome': empregado.getNome(),
+        'Valor salário bruto': empregado.getSalarioBruto(),
+        'Quantidade horas extras': empregado.getQuantidadelHorasExtras(),
+        'Valor total de horas extra': empregado.getValorTotalHorasExtras(),
+        'Faixa de desconto do INSS': empregado.getFaixaDescontoINSS(),
+        'Valor descontado para o INSS': empregado.getValorDescontadoINSS(),
+        'Faixa de desconto do IR': empregado.getFaixaDescontoIR(),
+        'Valor descontado para o IR': empregado.getValorDescontadoIR(),
+        'Valor salário líquido': empregado.getValorSalarioLiquido()
+    });
 }
 calculaSalario(process.argv[2], process.argv[3], process.argv[4]);
-// calculaSalario("Nome", 2500, 20)
